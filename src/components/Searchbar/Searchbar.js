@@ -1,32 +1,27 @@
-import { Component } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify';
 import PropTypes from "prop-types"
 import { Form, FormButton, Label, Input, Header} from './Searchbar.styled'
 import { FcSearch } from "react-icons/fc"
 
-export class Searchbar extends Component{
+export const Searchbar = ({onSubmit, }) => {
 
-  static propTypes = {
-    onSubmit:PropTypes.func.isRequired,
-}
+  const [query, setQuery] = useState('');
 
-  state = { query: '' }
-  onChange = event => {
-    this.setState({ query: event.currentTarget.value})
+ const onChange = event => {
+   setQuery (event.currentTarget.value)
   } 
-  onSubmit = event => {
+ const submitHandler = event => {
     event.preventDefault();
 
-    if (!this.state.query.trim()) {
+    if (!query.trim()) {
       return toast.warning('please type something');
     }
-
-      this.props.onSubmit(this.state.query)
+      onSubmit(query)
   }
-  render() {
     return (
 <Header>
-        <Form onSubmit={this.onSubmit}>
+        <Form onSubmit={submitHandler}>
           
     <FormButton type="submit">
         <Label>Search</Label>
@@ -37,15 +32,13 @@ export class Searchbar extends Component{
       autoComplete="off"
       autoFocus
       placeholder="Search images and photos"
-      onChange={this.onChange}
-          
+      onChange={onChange}
       />
-          
   </Form>
 </Header>
     )
   }
-}
 
-
-
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
